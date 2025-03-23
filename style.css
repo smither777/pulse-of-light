@@ -2,27 +2,31 @@ body {
   margin: 0;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   overflow: hidden;
+  height: 100vh; /* Full viewport height */
+  font-family: 'Montserrat', sans-serif;
 }
 
 #welcome {
-  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full screen */
+  width: 90%;
   max-width: 800px;
-  min-width: 300px;
-  margin: 10vh auto;
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
+  margin: 0 auto;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   position: relative;
 }
 
 #welcome-pulse {
-  width: 40px;
-  height: 40px;
+  width: 10vmin; /* Scales with smaller viewport dimension */
+  height: 10vmin;
   background: #fff;
   border-radius: 50%;
   position: absolute;
-  top: -60px;
+  top: 10%; /* Relative to container */
   left: 50%;
   transform: translateX(-50%);
   box-shadow: 0 0 15px #fff, 0 0 30px #e94560, 0 0 50px #e94560;
@@ -36,28 +40,31 @@ body {
 }
 
 #welcome h1 {
-  font-size: clamp(24px, 4vw, 36px);
+  font-size: clamp(20px, 5vw, 36px); /* Scales smoothly */
   letter-spacing: 2px;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 #welcome p {
-  font-size: clamp(14px, 2vw, 20px);
+  font-size: clamp(12px, 3vw, 20px);
   line-height: 1.5;
-  margin-bottom: 30px;
+  margin: 0 0 20px;
+  text-align: center;
+  padding: 0 10px; /* Prevent text overflow */
 }
 
 #start, #restart, #share-x, #share-facebook {
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(14px, 1.8vw, 18px);
-  padding: 8px 16px;
+  font-size: clamp(14px, 3vw, 18px);
+  padding: 10px 20px;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
-  margin: 5px; /* Reduced spacing */
+  margin: 5px;
+  min-width: 100px; /* Better touch target */
+  touch-action: manipulation; /* Improve mobile tap */
 }
 
 #start, #restart {
@@ -79,62 +86,63 @@ body {
 }
 
 #game {
-  width: 90vw;
-  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 90vh; /* Slightly less than full to avoid overlap */
+  width: 90%;
   max-width: 800px;
-  min-width: 300px;
-  max-height: 600px;
-  min-height: 200px;
   margin: 5vh auto;
   position: relative;
-  overflow: hidden;
   border: 2px solid #e94560;
   box-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
   background: rgba(255, 255, 255, 0.05);
 }
 
 #pulse {
-  width: 3vw;
-  height: 3vw;
-  max-width: 30px;
-  min-width: 15px;
+  width: 8vmin; /* Scales with viewport */
+  height: 8vmin;
+  max-width: 60px;
+  min-width: 30px;
   background: #fff;
   border-radius: 50%;
   position: absolute;
-  top: calc(50% - 1.5vw);
-  left: calc(50% - 1.5vw);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   box-shadow: 0 0 15px #fff, 0 0 30px #e94560, 0 0 50px #e94560;
   transition: transform 0.2s ease, opacity 0.5s ease, box-shadow 0.3s ease, width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+  touch-action: none; /* Prevent scroll interference */
 }
 
 #pulse.medium {
-  width: 4vw;
-  height: 4vw;
-  max-width: 40px;
-  min-width: 20px;
+  width: 10vmin;
+  height: 10vmin;
+  max-width: 80px;
+  min-width: 40px;
 }
 
 #pulse.oval {
-  width: 5vw;
-  height: 3vw;
-  max-width: 50px;
-  min-width: 25px;
+  width: 12vmin;
+  height: 8vmin;
+  max-width: 100px;
+  min-width: 50px;
   border-radius: 50% / 75%;
 }
 
 #pulse.dynamic {
-  width: 5vw;
-  height: 3vw;
-  max-width: 50px;
-  min-width: 25px;
+  width: 12vmin;
+  height: 8vmin;
+  max-width: 100px;
+  min-width: 50px;
   border-radius: 50% / 75%;
   animation: dynamicMorph 1.5s infinite ease-in-out;
 }
 
 @keyframes dynamicMorph {
-  0% { width: 5vw; height: 3vw; }
-  50% { width: 4.5vw; height: 3.5vw; }
-  100% { width: 5vw; height: 3vw; }
+  0% { width: 12vmin; height: 8vmin; }
+  50% { width: 10vmin; height: 10vmin; }
+  100% { width: 12vmin; height: 8vmin; }
 }
 
 #pulse:hover {
@@ -142,22 +150,56 @@ body {
 }
 
 .text {
-  font-family: 'Montserrat', sans-serif;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   letter-spacing: 1px;
-  position: absolute;
-  width: 100%;
+  font-size: clamp(14px, 3vw, 24px);
   text-align: center;
-  font-size: clamp(16px, 2vw, 24px);
+  width: 100%;
+  padding: 10px;
 }
 
 .beats {
-  top: 20px;
+  position: absolute;
+  top: 5%;
 }
 
 .message {
-  bottom: 20px;
+  position: absolute;
+  bottom: 5%;
   opacity: 0;
   transition: opacity 1s ease;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 480px) {
+  #welcome-pulse {
+    width: 8vmin;
+    height: 8vmin;
+    top: 5%;
+  }
+
+  #welcome h1 {
+    font-size: clamp(16px, 4vw, 24px);
+  }
+
+  #welcome p {
+    font-size: clamp(10px, 2.5vw, 16px);
+  }
+
+  #pulse {
+    width: 12vmin;
+    height: 12vmin;
+    min-width: 40px;
+  }
+
+  #pulse.medium {
+    width: 14vmin;
+    height: 14vmin;
+  }
+
+  #pulse.oval, #pulse.dynamic {
+    width: 16vmin;
+    height: 10vmin;
+  }
 }

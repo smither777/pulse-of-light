@@ -38,20 +38,42 @@ pulse.addEventListener('click', () => {
   }
 });
 
+pulse.addEventListener('touchstart', (e) => {
+  e.preventDefault(); // Prevent scrolling
+  pulses++;
+  pulsesDisplay.textContent = pulses;
+  speed += 0.2;
+  brightness = Math.min(2, brightness + 0.1);
+  fade = Math.min(1, fade + 0.3);
+  pulse.style.transform = `scale(${brightness})`;
+  directionX = (Math.random() - 0.5) * 2;
+  directionY = (Math.random() - 0.5) * 2;
+
+  if (pulses === 10) {
+    pulse.classList.add('medium');
+  } else if (pulses === 30) {
+    pulse.classList.remove('medium');
+    pulse.classList.add('oval');
+  } else if (pulses === 50) {
+    pulse.classList.remove('oval');
+    pulse.classList.add('dynamic');
+  }
+});
+
 function startGame() {
   welcome.style.display = 'none';
-  game.style.display = 'block';
+  game.style.display = 'flex';
   
   pulses = 0;
   pulsesDisplay.textContent = pulses;
   speed = 2;
   brightness = 1;
   fade = 1;
-  x = game.offsetWidth / 2 - pulse.offsetWidth / 2;
-  y = game.offsetHeight / 2 - pulse.offsetHeight / 2;
+  x = 50; // Percentage-based starting position
+  y = 50;
   
-  pulse.style.left = `${x}px`;
-  pulse.style.top = `${y}px`;
+  pulse.style.left = `${x}%`;
+  pulse.style.top = `${y}%`;
   pulse.style.opacity = fade;
   pulse.style.transform = `scale(${brightness})`;
   pulse.style.display = 'block';
@@ -69,14 +91,17 @@ function movePulse() {
   const gameHeight = game.offsetHeight;
   const pulseSize = pulse.offsetWidth;
 
-  x += directionX * speed;
-  y += directionY * speed;
+  x += directionX * speed * (gameWidth / 100); // Scale movement to viewport
+  y += directionY * speed * (gameHeight / 100);
 
-  if (x <= 0 || x >= gameWidth - pulseSize) directionX *= -1;
-  if (y <= 0 || y >= gameHeight - pulseSize) directionY *= -1;
+  // Keep pulse within bounds (5% padding)
+  if (x <= 5) x = 5;
+  if (x >= 95 - (pulseSize / gameWidth * 100)) x = 95 - (pulseSize / gameWidth * 100);
+  if (y <= 15) y = 15; // Account for .beats
+  if (y >= 85 - (pulseSize / gameHeight * 100)) y = 85 - (pulseSize / gameHeight * 100);
 
-  pulse.style.left = `${x}px`;
-  pulse.style.top = `${y}px`;
+  pulse.style.left = `${x}%`;
+  pulse.style.top = `${y}%`;
 
   fade -= 0.005;
   pulse.style.opacity = fade;
@@ -98,8 +123,10 @@ function gameOver() {
   const gameOverText = document.createElement('p');
   gameOverText.textContent = 'Game Over';
   gameOverText.className = 'text';
+  gameOverText.style.position = 'absolute';
   gameOverText.style.top = '40%';
-  gameOverText.style.transform = 'translateY(-50%)';
+  gameOverText.style.left = '50%';
+  gameOverText.style.transform = 'translateX(-50%)';
   game.appendChild(gameOverText);
 
   const restartButton = document.createElement('button');
@@ -116,7 +143,7 @@ function gameOver() {
   shareX.textContent = 'X';
   shareX.style.position = 'absolute';
   shareX.style.top = '75%';
-  shareX.style.left = '45%'; // Closer to center
+  shareX.style.left = '45%';
   shareX.style.transform = 'translateX(-50%)';
   game.appendChild(shareX);
 
@@ -125,7 +152,7 @@ function gameOver() {
   shareFacebook.textContent = 'Facebook';
   shareFacebook.style.position = 'absolute';
   shareFacebook.style.top = '75%';
-  shareFacebook.style.left = '55%'; // Closer to center
+  shareFacebook.style.left = '55%';
   shareFacebook.style.transform = 'translateX(-50%)';
   game.appendChild(shareFacebook);
 
@@ -135,19 +162,18 @@ function gameOver() {
     game.removeChild(shareX);
     game.removeChild(shareFacebook);
     game.style.display = 'none';
-    welcome.style.display = 'block';
+    welcome.style.display = 'flex';
   });
 
-  const shareText = `I sustained the Pulse of Light for ${pulses} pulses! Can you keep the spark alive? Try it: [Your Game URL] #PulseOfLight`;
-  const encodedText = encodeURIComponent(shareText);
-
   shareX.addEventListener('click', () => {
-    const xUrl = `https://twitter.com/intent/tweet?text=${encodedText}`;
+    const shareText = `I sustained the Pulse of Light for ${pulses} pulses! Can you keep the spark alive? Try it: ${window.location.href} #PulseOfLight`;
+    const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
     window.open(xUrl, '_blank');
   });
 
   shareFacebook.addEventListener('click', () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=[Your Game URL]&quote=${encodedText}`; // Fixed syntax
+    const shareText = `I sustained the Pulse of Light for ${pulses} pulses! Can you keep the spark alive? Try it: ${window.location.href} #PulseOfLight`;
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(shareText)}`;
     window.open(facebookUrl, '_blank');
   });
 }
